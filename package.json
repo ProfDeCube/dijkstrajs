@@ -1,6 +1,6 @@
 {
-  "name": "dijkstrajs",
-  "version": "1.0.0",
+  "name": "modern-dijkstra",
+  "version": "1.1.0",
   "description": "A modern JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.",
   "scripts": {
     "test": "mocha -r esm"
