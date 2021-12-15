@@ -2,7 +2,7 @@
 
 dijkstrajs is a simple JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.
 
-The code was originally written by Wyatt Baldwin and turned into a node module by Thomas Cort.
+The code was originally written by Wyatt Baldwin, turned into a node module by Thomas Cort and modernised for ES6 JavaScript by James McIntosh.
 
 ## Requirements
 
@@ -10,7 +10,7 @@ The code was originally written by Wyatt Baldwin and turned into a node module b
 
 ## Installation
 
-    npm install dijkstrajs
+    npm install modern-dijkstra
 
 ## Examples
 
