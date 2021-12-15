@@ -1,6 +1,6 @@
 {
   "name": "modern-dijkstra",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "main": "dijkstra.js",
   "description": "A modern JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.",
