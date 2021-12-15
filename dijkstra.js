@@ -1,12 +1,10 @@
-'use strict';
-
 /******************************************************************************
  * Created 2008-08-19.
  *
  * Dijkstra path-finding functions. Adapted from the Dijkstar Python project.
  *
- * Copyright (C) 2008
- *   Wyatt Baldwin <self@wyattbaldwin.com>
+ * Copyright (C) 2021
+ *   James McIntosh <github@ProfDeCube.com>
  *   All rights reserved
  *
  * Licensed under the MIT license.
@@ -21,145 +19,94 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *****************************************************************************/
-var dijkstra = {
-  single_source_shortest_paths: function(graph, s, d) {
-    // Predecessor map for each node that has been encountered.
-    // node ID => predecessor node ID
-    var predecessors = {};
+let queue = [];
+const addToQueue = (value, cost) => {
+  queue.push({ value, cost });
+  queue.sort((a, b) => b.cost - a.cost);
+}
 
-    // Costs of shortest paths from s to all nodes encountered.
-    // node ID => cost
-    var costs = {};
-    costs[s] = 0;
+const singleSourceShortestPaths = (graph, start, destination) => {
+  // Predecessor map for each node that has been encountered.
+  // node ID => predecessor node ID
+  const predecessors = {};
 
-    // Costs of shortest paths from s to all nodes encountered; differs from
-    // `costs` in that it provides easy access to the node that currently has
-    // the known shortest path from s.
-    // XXX: Do we actually need both `costs` and `open`?
-    var open = dijkstra.PriorityQueue.make();
-    open.push(s, 0);
+  // Costs of shortest paths from s to all nodes encountered.
+  // node ID => cost
+  const costs = {};
+  costs[start] = 0;
 
-    var closest,
-        u, v,
-        cost_of_s_to_u,
-        adjacent_nodes,
-        cost_of_e,
-        cost_of_s_to_u_plus_cost_of_e,
-        cost_of_s_to_v,
-        first_visit;
-    while (!open.empty()) {
-      // In the nodes remaining in graph that have a known cost from s,
-      // find the node, u, that currently has the shortest path from s.
-      closest = open.pop();
-      u = closest.value;
-      cost_of_s_to_u = closest.cost;
+  // Costs of shortest paths from s to all nodes encountered; differs from
+  // `costs` in that it provides easy access to the node that currently has
+  // the known shortest path from s.
+  // XXX: Do we actually need both `costs` and `open`?
+  queue = [];
+  addToQueue(start, 0);
 
-      // Get nodes adjacent to u...
-      adjacent_nodes = graph[u] || {};
+  while (queue.length) {
+    // In the nodes remaining in graph that have a known cost from s,
+    // find the node, closestValue, that currently has the shortest path from s.
+    const closest = queue.pop();
+    const shortestValue = closest.value;
+    const shortestCost = closest.cost;
 
-      // ...and explore the edges that connect u to those nodes, updating
-      // the cost of the shortest paths to any or all of those nodes as
-      // necessary. v is the node across the current edge from u.
-      for (v in adjacent_nodes) {
-        if (adjacent_nodes.hasOwnProperty(v)) {
-          // Get the cost of the edge running from u to v.
-          cost_of_e = adjacent_nodes[v];
+    // Get nodes adjacent to closestValue...
+    const adjacentNodes = graph[shortestValue] || {};
 
-          // Cost of s to u plus the cost of u to v across e--this is *a*
-          // cost from s to v that may or may not be less than the current
-          // known cost to v.
-          cost_of_s_to_u_plus_cost_of_e = cost_of_s_to_u + cost_of_e;
+    // ...and explore the edges that connect closestValue to those nodes, updating
+    // the cost of the shortest paths to any or all of those nodes as
+    // necessary. adjacentNode is the node across the current edge from closestValue.
+    for (const adjacentNode in adjacentNodes) {
+      if (adjacentNodes.hasOwnProperty(adjacentNode)) {
+        // Get the cost of the edge running from closestValue to adjacentNode.
+        const adjacentNodeCost = adjacentNodes[adjacentNode];
 
-          // If we haven't visited v yet OR if the current known cost from s to
-          // v is greater than the new cost we just found (cost of s to u plus
-          // cost of u to v across e), update v's cost in the cost list and
-          // update v's predecessor in the predecessor list (it's now u).
-          cost_of_s_to_v = costs[v];
-          first_visit = (typeof costs[v] === 'undefined');
-          if (first_visit || cost_of_s_to_v > cost_of_s_to_u_plus_cost_of_e) {
-            costs[v] = cost_of_s_to_u_plus_cost_of_e;
-            open.push(v, cost_of_s_to_u_plus_cost_of_e);
-            predecessors[v] = u;
-          }
+        // Cost of s to closestValue plus the cost of closestValue to adjacentNode across e--this is *a*
+        // cost from s to adjacentNode that may or may not be less than the current
+        // known cost to adjacentNode.
+        const totalCostToAdjecentNode = shortestCost + adjacentNodeCost;
+
+        // If we haven't visited adjacentNode yet OR if the current known cost from s to
+        // adjacentNode is greater than the new cost we just found (cost of s to closestValue plus
+        // cost of closestValue to adjacentNode across e), update adjacentNode's cost in the cost list and
+        // update adjacentNode's predecessor in the predecessor list (it's now closestValue).
+        const cost_of_s_to_v = costs[adjacentNode];
+        const first_visit = (typeof costs[adjacentNode] === 'undefined');
+        if (first_visit || cost_of_s_to_v > totalCostToAdjecentNode) {
+          costs[adjacentNode] = totalCostToAdjecentNode;
+          addToQueue(adjacentNode, totalCostToAdjecentNode);
+          predecessors[adjacentNode] = shortestValue;
         }
       }
-    }
-
-    if (typeof d !== 'undefined' && typeof costs[d] === 'undefined') {
-      var msg = ['Could not find a path from ', s, ' to ', d, '.'].join('');
-      throw new Error(msg);
-    }
-
-    return predecessors;
-  },
-
-  extract_shortest_path_from_predecessor_list: function(predecessors, d) {
-    var nodes = [];
-    var u = d;
-    var predecessor;
-    while (u) {
-      nodes.push(u);
-      predecessor = predecessors[u];
-      u = predecessors[u];
-    }
-    nodes.reverse();
-    return nodes;
-  },
-
-  find_path: function(graph, s, d) {
-    var predecessors = dijkstra.single_source_shortest_paths(graph, s, d);
-    return dijkstra.extract_shortest_path_from_predecessor_list(
-      predecessors, d);
-  },
-
-  /**
-   * A very naive priority queue implementation.
-   */
-  PriorityQueue: {
-    make: function (opts) {
-      var T = dijkstra.PriorityQueue,
-          t = {},
-          key;
-      opts = opts || {};
-      for (key in T) {
-        if (T.hasOwnProperty(key)) {
-          t[key] = T[key];
-        }
-      }
-      t.queue = [];
-      t.sorter = opts.sorter || T.default_sorter;
-      return t;
-    },
-
-    default_sorter: function (a, b) {
-      return a.cost - b.cost;
-    },
-
-    /**
-     * Add a new item to the queue and ensure the highest priority element
-     * is at the front of the queue.
-     */
-    push: function (value, cost) {
-      var item = {value: value, cost: cost};
-      this.queue.push(item);
-      this.queue.sort(this.sorter);
-    },
-
-    /**
-     * Return the highest priority element in the queue.
-     */
-    pop: function () {
-      return this.queue.shift();
-    },
-
-    empty: function () {
-      return this.queue.length === 0;
     }
   }
-};
 
-
-// node.js module exports
-if (typeof module !== 'undefined') {
-  module.exports = dijkstra;
+  if (typeof destination !== 'undefined' && typeof costs[destination] === 'undefined') {
+    throw new Error( `Could not find a path from ${start} to ${destination}.`);
+  }
+  return [predecessors, costs];
 }
+
+const extractShortestPathFromPredecessorList = (predecessors, destination) => {
+  const nodes = [];
+  let closestValue = destination;
+  while (closestValue) {
+    nodes.push(closestValue);
+    closestValue = predecessors[closestValue];
+  }
+  nodes.reverse();
+  return nodes;
+}
+
+export const findPath = (graph, start, destination) => {
+  const [predecessors, costs] = singleSourceShortestPaths(graph, start, destination);
+  return extractShortestPathFromPredecessorList(
+    predecessors, destination);
+}
+
+export const findPathWithCost = (graph, start, destination) => {
+  const [predecessors, costs] = singleSourceShortestPaths(graph, start, destination);
+  return [extractShortestPathFromPredecessorList(
+    predecessors, destination), costs[destination]];
+}
+
+export default {findPath, findPathWithCost, singleSourceShortestPaths }

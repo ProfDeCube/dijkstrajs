@@ -1,8 +1,8 @@
 ```
 Dijkstra path-finding functions. Adapted from the Dijkstar Python project.
 
-Copyright (C) 2008
-  Wyatt Baldwin <self@wyattbaldwin.com>
+Copyright (C) 2021
+  James McIntosh <github@ProfDeCube.com>
   All rights reserved
 
 Licensed under the MIT license.

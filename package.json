@@ -1,15 +1,13 @@
 {
   "name": "dijkstrajs",
   "version": "1.0.2",
-  "description": "A simple JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.",
-  "main": "dijkstra.js",
+  "description": "A modern JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.",
   "scripts": {
-    "pretest": "jshint dijkstra.js",
-    "test": "mocha -R spec"
+    "test": "mocha -r esm"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/tcort/dijkstrajs"
+    "url": "git://github.com/ProfDeCube/dijkstrajs"
   },
   "keywords": [
     "dijkstra",
@@ -24,37 +22,10 @@
   },
   "homepage": "https://github.com/tcort/dijkstrajs",
   "devDependencies": {
-    "expect.js": "^0.3.1",
-    "jshint": "^2.12.0",
-    "mocha": "^8.4.0"
+    "mocha": "^8.4.0",
+    "chai": "^4.3.4",
+    "esm": "^3.2.25"
   },
-  "jshintConfig": {
-    "bitwise": true,
-    "curly": true,
-    "eqeqeq": true,
-    "forin": true,
-    "freeze": true,
-    "globalstrict": true,
-    "immed": true,
-    "indent": 4,
-    "moz": true,
-    "newcap": true,
-    "noarg": true,
-    "node": true,
-    "noempty": true,
-    "nonew": true,
-    "trailing": true,
-    "undef": true,
-    "smarttabs": true,
-    "strict": true,
-    "validthis": true,
-    "globals": {
-      "describe": false,
-      "it": false,
-      "before": false,
-      "beforeEach": false,
-      "after": false,
-      "afterEach": false
-    }
+  "dependencies": {
   }
 }
