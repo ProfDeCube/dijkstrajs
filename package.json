@@ -1,6 +1,6 @@
 {
   "name": "dijkstrajs",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "A modern JavaScript implementation of Dijkstra's single-source shortest-paths algorithm.",
   "scripts": {
     "test": "mocha -r esm"
@@ -18,9 +18,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tcort/dijkstrajs/issues"
+    "url": "https://github.com/ProfDeCube/dijkstrajs/issues"
   },
-  "homepage": "https://github.com/tcort/dijkstrajs",
+  "homepage": "https://github.com/ProfDeCube/dijkstrajs",
   "devDependencies": {
     "mocha": "^8.4.0",
     "chai": "^4.3.4",

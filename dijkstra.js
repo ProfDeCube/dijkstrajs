@@ -81,7 +81,7 @@ const singleSourceShortestPaths = (graph, start, destination) => {
   }
 
   if (typeof destination !== 'undefined' && typeof costs[destination] === 'undefined') {
-    throw new Error( `Could not find a path from ${start} to ${destination}.`);
+    throw new Error(`Could not find a path from ${start} to ${destination}.`);
   }
   return [predecessors, costs];
 }
@@ -98,9 +98,7 @@ const extractShortestPathFromPredecessorList = (predecessors, destination) => {
 }
 
 export const findPath = (graph, start, destination) => {
-  const [predecessors, costs] = singleSourceShortestPaths(graph, start, destination);
-  return extractShortestPathFromPredecessorList(
-    predecessors, destination);
+  return findPathWithCost(graph, start, destination)[0];
 }
 
 export const findPathWithCost = (graph, start, destination) => {
@@ -109,4 +107,4 @@ export const findPathWithCost = (graph, start, destination) => {
     predecessors, destination), costs[destination]];
 }
 
-export default {findPath, findPathWithCost, singleSourceShortestPaths }
+export default { findPath, findPathWithCost, singleSourceShortestPaths }
